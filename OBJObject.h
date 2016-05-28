@@ -33,6 +33,8 @@ public:
     GLint objShade;
     GLuint textureID;
     int facecount;
+    GLfloat minX, minY, minZ, maxX, maxY, maxZ;
+    
     void draw(glm::mat4, int);
     void update(int);
     void update(glm::vec3);

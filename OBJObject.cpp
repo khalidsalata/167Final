@@ -132,7 +132,6 @@ void OBJObject::parse(const char *filepath)
     int count = 1;
     
     int shapeCount = 1;
-    GLfloat minX, minY, minZ, maxX, maxY, maxZ;
     minX = minY = minZ = FLT_MAX;
     maxX = maxY = maxZ = FLT_MIN;
     while (getline(myFile,line)){
