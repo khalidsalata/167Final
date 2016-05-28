@@ -35,8 +35,9 @@ OBJObject::OBJObject(const char *filepath)
     tempW = toWorld = glm::mat4(1.0f);
     parse(filepath);
     name = filepath;
-    objShade = LoadShaders("/Users/adboom/Desktop/167Proj4/167Proj4/objShader.vert", "/Users/adboom/Desktop/167Proj4/167Proj4/objShader.frag");
-    
+    objShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
+//    objShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
+
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -65,38 +66,38 @@ OBJObject::OBJObject(const char *filepath)
     
     glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
     
-    //Get ready for some texture shit
-    glGenTextures(1, &textureID);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    
-    // Make sure no bytes are padded:
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    
-    unsigned char * image;
-    int width = 512;
-    int height = 512;
-    std::string path = "/Users/adboom/Downloads/skybox/";
-        
-    // Select GL_MODULATE to mix texture with polygon color for shading:
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    
-    // Use bilinear interpolation:
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    // Use clamp to edge to hide skybox edges:
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
-    
-    
-    //We're done, we can unbind the texture
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    
-    
+//    //Get ready for some texture shit
+//    glGenTextures(1, &textureID);
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, textureID);
+//    
+//    // Make sure no bytes are padded:
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//    
+//    unsigned char * image;
+//    int width = 512;
+//    int height = 512;
+//    std::string path = "/Users/adboom/Downloads/skybox/";
+//        
+//    // Select GL_MODULATE to mix texture with polygon color for shading:
+//    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//    
+//    // Use bilinear interpolation:
+//    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    
+//    // Use clamp to edge to hide skybox edges:
+//    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    
+//    //glEnable(GL_CULL_FACE);
+//    //glCullFace(GL_BACK);
+//    
+//    
+//    //We're done, we can unbind the texture
+//    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+//    
+//    
 
     
     
@@ -161,9 +162,10 @@ void OBJObject::parse(const char *filepath)
                 this->normals.push_back(colors);
             }
             if(line[0] == 'f'){
-                for(int i = 1; i < 4; i++){
-                    unsigned long pos = toks[i].find("//");
+                for(int i = 1; i < 5; i++){
+                    unsigned long pos = toks[i].find("/");
                     unsigned int v = stoi(toks[i].substr(0,pos));
+                    cout<<":"<<v<<endl;
                     this->indices.push_back(v-1);
                 }
                 shapeCount++;
@@ -233,7 +235,7 @@ void OBJObject::draw(glm::mat4 C, int type)
     glUniform1i(glGetUniformLocation(objShade, "skybox"), 0);
     
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, this->facecount * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_QUADS, this->facecount * 4, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     
     //tempW = glm::mat4(1.0f);

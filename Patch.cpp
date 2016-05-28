@@ -23,7 +23,8 @@ Patch::Patch(std::vector<glm::vec4> points){
     
     setControl();
     
-    patchShade = LoadShaders("/Users/adboom/Desktop/167Final/167Final/167Final/objShader.vert", "/Users/adboom/Desktop/167Final/167Final/167Final/objShader.frag");
+    patchShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
+//    patchShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
     
     makeCurves();
     genBigBuf();

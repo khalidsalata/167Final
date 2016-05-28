@@ -103,7 +103,8 @@ void Window::initialize_objects()
 #ifdef _WIN32 // Windows (both 32 and 64 bit versions)
     shaderProgram = LoadShaders("../shader.vert", "../shader.frag");
 #else // Not windows
-    shaderProgram = LoadShaders("/Users/adboom/Desktop/167Proj4/167Proj4/shader.vert", "/Users/adboom/Desktop/167Proj4/167Proj4/shader.frag");
+    shaderProgram = LoadShaders("/Users/adboom/Downloads/skybox/shader.vert", "/Users/adboom/Downloads/skybox/shader.frag");
+//    shaderProgram = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.frag");
 #endif
 }
 

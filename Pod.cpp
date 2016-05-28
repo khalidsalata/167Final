@@ -12,7 +12,8 @@
 
 Pod::Pod(){
     system("pwd");
-    this->p = new OBJObject("rock1.obj");
+    this->p = new OBJObject("/Users/adboom/Downloads/skybox/rock1.obj");
+//    this->p = new OBJObject("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/rock1.obj");
 }
 
 void Pod::draw(glm::mat4 C){
