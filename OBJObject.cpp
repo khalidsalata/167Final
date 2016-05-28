@@ -35,7 +35,7 @@ OBJObject::OBJObject(const char *filepath)
     tempW = toWorld = glm::mat4(1.0f);
     parse(filepath);
     name = filepath;
-    objShade = LoadShaders("/Users/adboom/Desktop/167Proj3/167Proj3/objShader.vert", "/Users/adboom/Desktop/167Proj3/167Proj3/objShader.frag");
+    objShade = LoadShaders("/Users/adboom/Desktop/167Proj4/167Proj4/objShader.vert", "/Users/adboom/Desktop/167Proj4/167Proj4/objShader.frag");
     
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -64,6 +64,42 @@ OBJObject::OBJObject(const char *filepath)
     glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
     
     glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+    
+    //Get ready for some texture shit
+    glGenTextures(1, &textureID);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
+    unsigned char * image;
+    int width = 512;
+    int height = 512;
+    std::string path = "/Users/adboom/Downloads/skybox/";
+        
+    // Select GL_MODULATE to mix texture with polygon color for shading:
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    // Use clamp to edge to hide skybox edges:
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    
+    
+    //We're done, we can unbind the texture
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    
+    
+
+    
+    
 }
 
 OBJObject::~OBJObject(){
@@ -100,9 +136,12 @@ void OBJObject::parse(const char *filepath)
     maxX = maxY = maxZ = FLT_MIN;
     while (getline(myFile,line)){
         if(line[0] == 'v' || line[0] == 'f'){
-            std::istringstream buf(line);
-            std::istream_iterator<std::string> beg(buf), end;
-            std::vector<std::string> toks(beg, end);
+            std::istringstream buffer(line);
+            std::vector<std::string> toks;
+            
+            std::copy(std::istream_iterator<std::string>(buffer),
+                      std::istream_iterator<std::string>(),
+                      std::back_inserter(toks));
             x = stof(toks[1]);
             y = stof(toks[2]);
             z = stof(toks[3]);
@@ -198,6 +237,8 @@ void OBJObject::draw(glm::mat4 C, int type)
     glBindVertexArray(0);
     
     //tempW = glm::mat4(1.0f);
+    
+    
 }
 
 void OBJObject::update(int dir){

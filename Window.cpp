@@ -15,6 +15,7 @@ bool camMode, click, run;
 int selected = 0;
 float podPos, gypos, gxpos, initH;
 float g = -0.0001f;
+Pod* rock;
 
 Camera *cam;
 Point *c11, *c12, *c21, *c22, *c31, *c32, *c41, *c42, *c51, *c52, *c61, *c62, *c71, *c72, *c81, *c82;
@@ -44,6 +45,7 @@ void Window::initialize_objects()
 {
     //Native Objects
     skyCube = new Cube();
+    rock = new Pod();
     
     camMode = true;
     click = false;
@@ -184,6 +186,7 @@ void Window::display_callback(GLFWwindow* window)
     skyCube->draw(shaderProgram);
 
     p0->draw(glm::mat4(1.0f));
+    rock->draw(glm::mat4(1.0f));
     pDraw();
     
     // Gets events, including input such as keyboard and mouse or window resizing

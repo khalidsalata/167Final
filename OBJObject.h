@@ -31,6 +31,7 @@ public:
     glm::mat4 tempW;
     float angle;
     GLint objShade;
+    GLuint textureID;
     int facecount;
     void draw(glm::mat4, int);
     void update(int);

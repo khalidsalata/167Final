@@ -11,7 +11,8 @@
 #include "OBJObject.h"
 
 Pod::Pod(){
-    this->p = new OBJObject("pod.obj");
+    system("pwd");
+    this->p = new OBJObject("rock1.obj");
 }
 
 void Pod::draw(glm::mat4 C){
