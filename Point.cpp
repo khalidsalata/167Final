@@ -14,11 +14,13 @@ Point::Point(glm::vec4 posC, int idC){
     pos = posC;
     id = idC;
     M = glm::mat4(1.0f);
-    
-    selShade = LoadShaders("/Users/adboom/Downloads/skybox/selection.vert", "/Users/adboom/Downloads/skybox/selection.frag");
-    pointShade = LoadShaders("/Users/adboom/Downloads/skybox/pointShader.vert", "/Users/adboom/Downloads/skybox/pointShader.frag");
-//    selShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.frag");
-//    pointShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.frag");
+    if(Window::khalid){
+        selShade = LoadShaders("/Users/adboom/Downloads/skybox/selection.vert", "/Users/adboom/Downloads/skybox/selection.frag");
+        pointShade = LoadShaders("/Users/adboom/Downloads/skybox/pointShader.vert", "/Users/adboom/Downloads/skybox/pointShader.frag");
+    } else {
+    selShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.frag");
+    pointShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.frag");
+    }
     update(glm::mat4(1.0f));
     
 }

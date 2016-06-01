@@ -3,7 +3,10 @@
 #include "OBJObject.h"
 #include "SceneGraph.h"
 
+#define thisIsKhalid 0
+
 const char* window_title = "GLFW Starter Project";
+bool Window::khalid;
 Cube* skyCube;
 glm::vec3 tv;
 glm::vec3 lastP;
@@ -43,6 +46,7 @@ glm::mat4 Window::V;
 
 void Window::initialize_objects()
 {
+    khalid = thisIsKhalid;
     //Native Objects
     skyCube = new Cube();
     rock = new Pod();
@@ -103,8 +107,11 @@ void Window::initialize_objects()
 #ifdef _WIN32 // Windows (both 32 and 64 bit versions)
     shaderProgram = LoadShaders("../shader.vert", "../shader.frag");
 #else // Not windows
+    if(khalid){
     shaderProgram = LoadShaders("/Users/adboom/Downloads/skybox/shader.vert", "/Users/adboom/Downloads/skybox/shader.frag");
-//    shaderProgram = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.frag");
+    } else {
+    shaderProgram = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/shader.frag");
+    }
 #endif
 }
 

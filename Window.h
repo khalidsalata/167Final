@@ -12,6 +12,7 @@
 class Window
 {
 public:
+    static bool khalid;
     static int width;
     static int height;
     static glm::mat4 P;

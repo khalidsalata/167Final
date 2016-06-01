@@ -83,9 +83,12 @@ Cube::Cube()
     unsigned char * image;
     int width = 512;
     int height = 512;
-    std::string path = "/Users/adboom/Downloads/skybox/";
-    //std::string path = "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/";
-    
+    std::string path;
+    if(Window::khalid){
+        path = "/Users/adboom/Downloads/skybox/";
+    } else {
+        path = "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/";
+    }
     image = loadPPM((path + "skybox_water222_right_php8QD91k.ppm").c_str(), width, height);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     image = loadPPM((path + "skybox_water222_left_phpPS32dF.ppm").c_str(), width, height);

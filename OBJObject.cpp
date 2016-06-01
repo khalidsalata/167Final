@@ -35,9 +35,11 @@ OBJObject::OBJObject(const char *filepath)
     tempW = toWorld = glm::mat4(1.0f);
     parse(filepath);
     name = filepath;
-    objShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
-//    objShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
-
+    if(Window::khalid){
+        objShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
+    } else {
+        objShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
+    }
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

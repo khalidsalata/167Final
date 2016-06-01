@@ -9,13 +9,15 @@
 #include <stdio.h>
 #include "SceneGraph.h"
 #include "OBJObject.h"
-
+#include "Window.h"
 Pod::Pod(){
     system("pwd");
-    this->p = new OBJObject("/Users/adboom/Downloads/skybox/rock1.obj");
-//    this->p = new OBJObject("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/rock1.obj");
+    if(Window::khalid){
+        this->p = new OBJObject("/Users/adboom/Downloads/skybox/rock1.obj");
+    } else {
+        this->p = new OBJObject("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/rock1.obj");
+    }
 }
-
 void Pod::draw(glm::mat4 C){
     glm::mat4 temp = M * C;
     this->p->draw(temp, 1);

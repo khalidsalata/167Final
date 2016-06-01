@@ -23,9 +23,11 @@ Patch::Patch(std::vector<glm::vec4> points){
     
     setControl();
     
+    if(Window::khalid){
     patchShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
-//    patchShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
-    
+    } else {
+    patchShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
+    }
     makeCurves();
     genBigBuf();
     
