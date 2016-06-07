@@ -42,7 +42,7 @@ Cube::Cube()
     
     this->angle = 0.0f;
     
-    this->toWorld = glm::scale(toWorld, glm::vec3(500.0f, 500.0f, 500.0f));
+//    this->toWorld = glm::scale(toWorld, glm::vec3(500.0f, 500.0f, 500.0f));
     
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -137,6 +137,9 @@ void Cube::draw(GLuint shaderProgram)
     glm::mat4 MVP = Window::P * Window::V * toWorld;
     // We need to calculate this because as of GLSL version 1.40 (OpenGL 3.1, released March 2009), gl_ModelViewProjectionMatrix has been
     // removed from the language. The user is expected to supply this matrix to the shader when using modern OpenGL.
+    glUseProgram(shaderProgram);
+    
+    glActiveTexture(GL_TEXTURE0);
     
     glDepthMask(GL_FALSE);
     glUniform1i(glGetUniformLocation(shaderProgram, "skybox"), 0);
@@ -146,6 +149,7 @@ void Cube::draw(GLuint shaderProgram)
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glDepthMask(GL_TRUE);
 }
 

@@ -10,10 +10,16 @@
 #include "SceneGraph.h"
 #include "window.h"
 
-Point::Point(glm::vec4 posC, int idC){
+Point::Point(glm::vec4 posC, int idC, GLint* pShade, GLint* sShade){
     pos = posC;
     id = idC;
     M = glm::mat4(1.0f);
+<<<<<<< HEAD
+    
+    pointShade = pShade;
+    selShade = sShade;
+    
+=======
     if(Window::khalid){
         selShade = LoadShaders("/Users/adboom/Downloads/skybox/selection.vert", "/Users/adboom/Downloads/skybox/selection.frag");
         pointShade = LoadShaders("/Users/adboom/Downloads/skybox/pointShader.vert", "/Users/adboom/Downloads/skybox/pointShader.frag");
@@ -21,6 +27,7 @@ Point::Point(glm::vec4 posC, int idC){
     selShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/selection.frag");
     pointShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/pointShader.frag");
     }
+>>>>>>> 1403a6471abeb90326555cf1b1d4d9b5c2e33959
     update(glm::mat4(1.0f));
     
 }
@@ -30,15 +37,16 @@ void Point::draw(glm::mat4 C, int sel){
     glm::mat4 MVP = Window::P * Window::V * M;
     glPointSize(10.0f);
     if(sel == 1){
-        glUseProgram(selShade);
-        GLuint idID = glGetUniformLocation(selShade, "id");
+        glUseProgram(*selShade);
+        GLuint idID = glGetUniformLocation(*selShade, "id");
         glUniform1ui(idID, id);
         glPointSize(25.0f);
     }
-    else{ glUseProgram(pointShade); }
+    else{ glUseProgram(*pointShade); }
+
     
-    GLuint MatrixID = glGetUniformLocation(selShade, "MVP");
-    GLuint modID = glGetUniformLocation(selShade,"model");
+    GLuint MatrixID = glGetUniformLocation(*selShade, "MVP");
+    GLuint modID = glGetUniformLocation(*selShade,"model");
     
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
     glUniformMatrix4fv(modID, 1, GL_FALSE, &M[0][0]);
@@ -81,6 +89,7 @@ void Point::update(glm::mat4 U){
 void Point::move(glm::vec4 toPoint){
     pos = pos + toPoint;
     M = glm::translate(glm::mat4(1.0f), glm::vec3(toPoint)) * M;
+    
    }
 
 void Point::waitMove(glm::vec4 toPoint){

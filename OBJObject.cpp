@@ -21,6 +21,8 @@ void OBJObject::genBigBuf()
         bigBuf.push_back(normals[i].x);
         bigBuf.push_back(normals[i].y);
         bigBuf.push_back(normals[i].z);
+        bigBuf.push_back(textures[i].x);
+        bigBuf.push_back(textures[i].y);
     }
 }
 
@@ -34,12 +36,17 @@ OBJObject::OBJObject(const char *filepath)
     expo = 100.0f;
     tempW = toWorld = glm::mat4(1.0f);
     parse(filepath);
+    boundBox = new boundingBox(minxg, minyg, minzg, maxxg, maxyg, maxzg);
     name = filepath;
+<<<<<<< HEAD
+    
+=======
     if(Window::khalid){
         objShade = LoadShaders("/Users/adboom/Downloads/skybox/objShader.vert", "/Users/adboom/Downloads/skybox/objShader.frag");
     } else {
         objShade = LoadShaders("/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.vert", "/Users/ahmed.elhosseiny/Documents/_CSE 167/Elhosseiny-Ahmed/CSE-167-Final/CSE-167-Final/167Final/objShader.frag");
     }
+>>>>>>> 1403a6471abeb90326555cf1b1d4d9b5c2e33959
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -59,15 +66,54 @@ OBJObject::OBJObject(const char *filepath)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), i, GL_STATIC_DRAW);
     
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*) (6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
+    
     
     glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
     
     glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
     
+<<<<<<< HEAD
+    //Get ready for some texture shit
+    glGenTextures(1, &textureID);
+    //glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    // Make sure no bytes are padded:
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
+    unsigned char * image;
+    int width = 512;
+    int height = 512;
+    std::string path = "/Users/adboom/Downloads/";
+    image = loadPPM((path + "rock_texture_jpg_phpfPp0Ku.ppm").c_str(), width, height);
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        
+    glGenerateMipmap(GL_TEXTURE_2D);
+    
+    // Use bilinear interpolation:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    
+    // Use clamp to edge to hide skybox edges:
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    
+    
+    //We're done, we can unbind the texture
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    
+=======
 //    //Get ready for some texture shit
 //    glGenTextures(1, &textureID);
 //    glActiveTexture(GL_TEXTURE0);
@@ -100,6 +146,7 @@ OBJObject::OBJObject(const char *filepath)
 //    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 //    
 //    
+>>>>>>> 1403a6471abeb90326555cf1b1d4d9b5c2e33959
 
     
     
@@ -114,15 +161,6 @@ OBJObject::~OBJObject(){
 
 void OBJObject::parse(const char *filepath)
 {
-   if(perstIn.count(filepath) > 0 && perstV.count(filepath) > 0){
-       printf("Using previous data\n");
-       vertices = perstV[filepath][0];
-       normals = perstV[filepath][1];
-       indices = perstIn[filepath];
-       facecount = perstCount[filepath];
-       return;
-    }
-    
     GLfloat x,y,z;  // vertex coordinates
     ifstream myFile(filepath);  // make the file name configurable so you can load other files
     if (myFile.is_open() == false) {
@@ -162,7 +200,31 @@ void OBJObject::parse(const char *filepath)
                 colors = (colors * glm::vec3(1,1,1))/glm::vec3(2,2,2);
                 this->normals.push_back(colors);
             }
+            else if(toks[0] == "vt"){
+                this->textures.push_back(glm::vec2(x, y));
+            }
             if(line[0] == 'f'){
+<<<<<<< HEAD
+                unsigned long pos = toks[1].find("/");
+                unsigned int v = stoi(toks[1].substr(0,pos));
+                this->indices.push_back(v-1);
+                pos = toks[2].find("/");
+                v = stoi(toks[2].substr(0,pos));
+                this->indices.push_back(v-1);
+                pos = toks[3].find("/");
+                v = stoi(toks[3].substr(0,pos));
+                this->indices.push_back(v-1);
+                pos = toks[1].find("/");
+                v = stoi(toks[1].substr(0,pos));
+                this->indices.push_back(v-1);
+                pos = toks[3].find("/");
+                v = stoi(toks[3].substr(0,pos));
+                this->indices.push_back(v-1);
+                pos = toks[4].find("/");
+                v = stoi(toks[4].substr(0,pos));
+                this->indices.push_back(v-1);
+                shapeCount = shapeCount + 2;
+=======
                 for(int i = 1; i < 5; i++){
                     unsigned long pos = toks[i].find("/");
                     unsigned int v = stoi(toks[i].substr(0,pos));
@@ -170,6 +232,7 @@ void OBJObject::parse(const char *filepath)
                     this->indices.push_back(v-1);
                 }
                 shapeCount++;
+>>>>>>> 1403a6471abeb90326555cf1b1d4d9b5c2e33959
             }
             else{ count++; }
         }
@@ -177,6 +240,8 @@ void OBJObject::parse(const char *filepath)
     }
     
     this->facecount = shapeCount;
+    
+    
     
     GLfloat deltaX = maxX - minX;
     GLfloat deltaY = maxY - minY;
@@ -190,6 +255,14 @@ void OBJObject::parse(const char *filepath)
     else { maxDel = deltaY; }
     
     if(maxDel < deltaZ) { maxDel = deltaZ; }
+    //Align with globals
+    maxxg = maxX/maxDel;
+    minxg = minX/maxDel;
+    minyg = minY/maxDel;
+    maxyg = maxY/maxDel;
+    minzg = minZ/maxDel;
+    maxzg = maxZ/maxDel;
+    
     
     for(int i = 0; i < this->vertices.size(); i++){
         glm::vec3& name = this->vertices[i];
@@ -201,15 +274,11 @@ void OBJObject::parse(const char *filepath)
     myFile.close();   // make sure you don't forget to close the file when done
     printf("There are %d triangles\n", shapeCount);
     
-    std::vector< std::vector<glm::vec3> > in = { vertices, normals };
     
-    perstV[filepath] = in;
-    perstIn[filepath] = indices;
-    perstCount[filepath] = shapeCount;
     
 }
 
-void OBJObject::draw(glm::mat4 C, int type)
+void OBJObject::draw(glm::mat4 C, int type, GLuint* shader)
 {
     glm::mat4 temp = C * toWorld;
     //temp = glm::rotate(temp, 0.02f * glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -222,25 +291,20 @@ void OBJObject::draw(glm::mat4 C, int type)
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Use the shader of programID
-    glUseProgram(objShade);
+    glUseProgram(*shader);
     
     
-    GLuint MatrixID = glGetUniformLocation(objShade, "MVP");
-    GLuint modID = glGetUniformLocation(objShade,"model");
-    GLuint invID = glGetUniformLocation(objShade,"invModel");
-    glm::mat4 invTo = glm::inverse(temp);
+    glUniform1i(glGetUniformLocation(*shader, "ourTexture"), 2);
+    GLuint MatrixID = glGetUniformLocation(*shader, "MVP");
+    
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-    glUniformMatrix4fv(modID, 1, GL_FALSE, &temp[0][0]);
-    glUniformMatrix4fv(invID, 1, GL_FALSE, &invTo[0][0]);
-    
-    glUniform1i(glGetUniformLocation(objShade, "skybox"), 0);
-    
+   
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, textureID);
     glBindVertexArray(VAO);
     glDrawElements(GL_QUADS, this->facecount * 4, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    
-    //tempW = glm::mat4(1.0f);
-    
+    //glBindTexture(GL_TEXTURE_2D, 0);
     
 }
 
@@ -295,6 +359,25 @@ void OBJObject::translate(int dir){
 
 void OBJObject::mtranslate(glm::vec3 tv){
     toWorld = glm::translate(glm::mat4(1.0f), tv) * toWorld;
+    float newminzg = boundBox->getMinZ() + tv.z;
+    float newmaxzg = boundBox->getMaxZ() + tv.z;
+    float newminyg = boundBox->getMinY() + tv.y;
+    float newmaxyg = boundBox->getMaxY() + tv.y;
+    float newminxg = boundBox->getMinX() + tv.x;
+    float newmaxxg = boundBox->getMaxX() + tv.x;
+    boundBox->update(newminxg, newminyg, newminzg, newmaxxg, newmaxyg, newmaxzg);
+}
+
+void OBJObject::hardTranslate(glm::vec3 tv){
+    toWorld[3] = glm::vec4(tv, 1.0f);
+    float newminzg = minzg + tv.z;
+    float newmaxzg = maxzg + tv.z;
+    float newminyg = minyg + tv.y;
+    float newmaxyg = maxyg + tv.y;
+    float newminxg = minxg + tv.x;
+    float newmaxxg = maxxg + tv.x;
+    boundBox->update(newminxg, newminyg, newminzg, newmaxxg, newmaxyg, newmaxzg);
+
 }
 
 void OBJObject::scale(int dir){
@@ -312,6 +395,13 @@ void OBJObject::scale(int dir){
 
 void OBJObject::scale(glm::vec3 sv){
     toWorld = glm::scale(toWorld, sv);
+    minzg = minzg * sv.z;
+    maxzg = maxzg * sv.z;
+    minyg = minyg * sv.y;
+    maxyg = maxyg * sv.y;
+    minxg = minxg * sv.x;
+    maxxg = maxxg * sv.x;
+    boundBox->update(minxg, minyg, minzg, maxxg, maxyg, maxzg);
 }
 
 void OBJObject::orbit(int dir){
@@ -335,4 +425,56 @@ void OBJObject::selforbit(float deg, glm::vec3 rv){
 
 void OBJObject::morbit(glm::vec3 rt, float deg){
     toWorld = glm::rotate(glm::mat4(1.0f), deg * glm::pi<float>(), rt) * toWorld;
+}
+
+unsigned char* OBJObject::loadPPM(const char* filename, int& width, int& height)
+{
+    const int BUFSIZE = 128;
+    FILE* fp;
+    unsigned int read;
+    unsigned char* rawData;
+    char buf[3][BUFSIZE];
+    char* retval_fgets;
+    size_t retval_sscanf;
+    
+    if ( (fp=fopen(filename, "rb")) == NULL)
+    {
+        std::cerr << "error reading ppm file, could not locate " << filename << std::endl;
+        width = 0;
+        height = 0;
+        return NULL;
+    }
+    
+    // Read magic number:
+    retval_fgets = fgets(buf[0], BUFSIZE, fp);
+    
+    // Read width and height:
+    do
+    {
+        retval_fgets=fgets(buf[0], BUFSIZE, fp);
+    } while (buf[0][0] == '#');
+    retval_sscanf=sscanf(buf[0], "%s %s", buf[1], buf[2]);
+    width  = atoi(buf[1]);
+    height = atoi(buf[2]);
+    
+    // Read maxval:
+    do
+    {
+        retval_fgets=fgets(buf[0], BUFSIZE, fp);
+    } while (buf[0][0] == '#');
+    
+    // Read image data:
+    rawData = new unsigned char[width * height * 3];
+    read = fread(rawData, width * height * 3, 1, fp);
+    fclose(fp);
+    if (read != 1)
+    {
+        std::cerr << "error parsing ppm file, incomplete data" << std::endl;
+        delete[] rawData;
+        width = 0;
+        height = 0;
+        return NULL;
+    }
+    
+    return rawData;
 }

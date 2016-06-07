@@ -34,6 +34,8 @@ public:
     static void ride();
     static void drawPod();
     static void pointMove(Point*, glm::vec4 toPoint);
+    static void drawEverything(int);
+    static void screenToWorld(float, float, glm::vec3*);
 };
 
 #endif

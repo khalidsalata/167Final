@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <cfloat>
+#include "boundingBox.h"
 
 class OBJObject
 {
@@ -19,6 +20,7 @@ public:
     GLuint VBO, VAO, EBO;
     const char* name;
     float expo;
+    boundingBox* boundBox;
     void parse(const char* filepath);
     static std::map<const char*, std::vector< std::vector<glm::vec3> > > perstV;
     static std::map<const char*, std::vector<GLuint> > perstIn;
@@ -26,22 +28,28 @@ public:
     std::vector<glm::vec3> vertices;
     std::vector<GLuint> indices;
     std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> textures;
     std::vector<GLfloat> bigBuf;
     glm::mat4 toWorld;
     glm::mat4 tempW;
     float angle;
-    GLint objShade;
+    GLint rockShade;
     GLuint textureID;
     int facecount;
+<<<<<<< HEAD
+    void draw(glm::mat4, int, GLuint*);
+=======
     GLfloat minX, minY, minZ, maxX, maxY, maxZ;
     
     void draw(glm::mat4, int);
+>>>>>>> 1403a6471abeb90326555cf1b1d4d9b5c2e33959
     void update(int);
     void update(glm::vec3);
     void update(glm::vec3, float deg);
     void spin(float);
     void translate(int);
     void mtranslate(glm::vec3);
+    void hardTranslate(glm::vec3);
     void scale(glm::vec3);
     void scale(int);
     void orbit(int);
@@ -49,6 +57,8 @@ public:
     void morbit(glm::vec3, float);
     void genBigBuf();
     void setExpo(float);
+    float minxg, maxxg, minyg, maxyg, minzg, maxzg;
+    unsigned char* loadPPM(const char*, int&, int&);
 };
 
 #endif

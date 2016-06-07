@@ -61,44 +61,53 @@ public:
     void update(glm::mat4);
 };
 
-class Pod: public Geode{
+class Pod {
 public:
     Pod();
     OBJObject * p;
-    void draw(glm::mat4);
+    GLint* shade;
+    void draw(GLuint);
     void update(glm::mat4);
     };
 
-class Patch: public Geode {
+class Patch {
 public:
-    GLuint VAO, VBO;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
+    GLuint VAO, VBO, EBO;
+    std::vector< std::vector<glm::vec3> > vertices;
+    std::vector< std::vector<glm::vec3> > normals;
+    std::vector< std::vector<glm::vec3> > preVert;
+    std::vector<GLuint> indicies;
     std::vector<glm::vec4> cps;
     std::vector<GLfloat> bigBuf;
-    GLint patchShade;
+    GLint* patchShade;
+    GLint depthTexture;
     glm::mat4 Gx, Gy, Gz, B;
     Patch(std::vector<glm::vec4>);
     glm::vec4 getPoint(float, glm::vec4, glm::vec4, glm::vec4, glm::vec4);
+    bool up;
     void makeCurves();
     void setControl();
-    void draw(glm::mat4);
+    void draw(GLuint);
     void update(glm::mat4);
-    void update();
+    void update(bool);
     void genBigBuf();
-    void setIds(int, int, int, int);
+    void makeIndicies();
+    void makeRipples(glm::vec3);
+    void splash(glm::vec3);
+    void hitNeighbors(int, int , int, float);
 };
 
-class Point: public Geode {
+class Point {
 public:
     int id;
     GLuint VAO, VBO;
-    GLint selShade;
-    GLint pointShade;
+    GLint* selShade;
+    GLint* pointShade;
     glm::vec4 pos;
     bool selDraw;
+    glm::mat4 M = glm::mat4(1.0f);
     
-    Point(glm::vec4, int);
+    Point(glm::vec4, int, GLint*, GLint*);
     void draw(glm::mat4);
     void draw(glm::mat4, int);
     void update(glm::mat4);
@@ -107,6 +116,22 @@ public:
     void waitMove(glm::vec4);
 };
 
+class Drops{
+public:
+    GLuint VAO, VBO, EBO;
+    glm::vec3 origin;
+    float time;
+    GLint* selShade;
+    std::vector<glm::vec3> droplets;
+    std::vector<glm::vec3> vels;
+    std::vector<GLfloat> bigBuf;
+    Drops(glm::vec3, bool);
+    void genBigBuf();
+    void move();
+    void draw(GLint);
+    void update();
+    
+};
 
 
 #endif /* SceneGraph_h */
